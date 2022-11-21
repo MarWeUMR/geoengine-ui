@@ -46,6 +46,8 @@ export class RasterSymbologyEditorComponent implements OnChanges, OnDestroy, Aft
 
     protected defaultColor?: ColorAttributeInput;
     protected noDataColor?: ColorAttributeInput;
+    protected overColor?: ColorAttributeInput;
+    protected underColor?: ColorAttributeInput;
 
     constructor(
         protected readonly projectService: ProjectService,
@@ -157,6 +159,54 @@ export class RasterSymbologyEditorComponent implements OnChanges, OnDestroy, Aft
             this.symbology = this.symbology.cloneWith({colorizer});
         } else if (this.symbology.colorizer instanceof PaletteColorizer) {
             const colorizer = this.symbology.colorizer.cloneWith({defaultColor});
+            this.symbology = this.symbology.cloneWith({colorizer});
+        } else {
+            throw new Error('unsupported colorizer type');
+        }
+
+        this.update();
+    }
+
+    getOverColor(): ColorAttributeInput {
+        if (!this.overColor) {
+            throw new Error('uninitialized defaultColor');
+        }
+
+        return this.overColor;
+    }
+
+    updateOverColor(overColorInput: ColorAttributeInput): void {
+        const overColor = overColorInput.value;
+
+        if (this.symbology.colorizer instanceof LinearGradient || this.symbology.colorizer instanceof LogarithmicGradient) {
+            const colorizer = this.symbology.colorizer.cloneWith({overColor});
+            this.symbology = this.symbology.cloneWith({colorizer});
+        } else if (this.symbology.colorizer instanceof PaletteColorizer) {
+            const colorizer = this.symbology.colorizer.cloneWith({overColor});
+            this.symbology = this.symbology.cloneWith({colorizer});
+        } else {
+            throw new Error('unsupported colorizer type');
+        }
+
+        this.update();
+    }
+
+    getUnderColor(): ColorAttributeInput {
+        if (!this.underColor) {
+            throw new Error('uninitialized defaultColor');
+        }
+
+        return this.underColor;
+    }
+
+    updateUnderColor(underColorInput: ColorAttributeInput): void {
+        const underColor = underColorInput.value;
+
+        if (this.symbology.colorizer instanceof LinearGradient || this.symbology.colorizer instanceof LogarithmicGradient) {
+            const colorizer = this.symbology.colorizer.cloneWith({underColor});
+            this.symbology = this.symbology.cloneWith({colorizer});
+        } else if (this.symbology.colorizer instanceof PaletteColorizer) {
+            const colorizer = this.symbology.colorizer.cloneWith({underColor});
             this.symbology = this.symbology.cloneWith({colorizer});
         } else {
             throw new Error('unsupported colorizer type');
@@ -320,6 +370,14 @@ export class RasterSymbologyEditorComponent implements OnChanges, OnDestroy, Aft
             this.noDataColor = {
                 key: 'No Data Color',
                 value: this.symbology.colorizer.noDataColor,
+            };
+            this.overColor = {
+                key: 'Over Color',
+                value: this.symbology.colorizer.overColor ?? this.symbology.colorizer.defaultColor,
+            };
+            this.underColor = {
+                key: 'Under Color',
+                value: this.symbology.colorizer.underColor ?? this.symbology.colorizer.defaultColor,
             };
         } else {
             this.noDataColor = undefined;

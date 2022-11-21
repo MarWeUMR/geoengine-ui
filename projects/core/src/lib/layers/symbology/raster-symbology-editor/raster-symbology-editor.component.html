@@ -55,6 +55,20 @@
                     [readonlyAttribute]="true"
                 >
                 </geoengine-color-attribute-input>
+                <geoengine-color-attribute-input
+                    [ngModel]="getOverColor()"
+                    (ngModelChange)="updateOverColor($event)"
+                    attributePlaceholder=""
+                    [readonlyAttribute]="true"
+                >
+                </geoengine-color-attribute-input>
+                <geoengine-color-attribute-input
+                    [ngModel]="getUnderColor()"
+                    (ngModelChange)="updateUnderColor($event)"
+                    attributePlaceholder=""
+                    [readonlyAttribute]="true"
+                >
+                </geoengine-color-attribute-input>
             </div>
 
             <p fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0.5rem">

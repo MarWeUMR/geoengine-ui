@@ -43,12 +43,16 @@ export class LinearGradient extends Colorizer {
     readonly breakpoints: Array<ColorBreakpoint>;
     readonly noDataColor: Color;
     readonly defaultColor: Color;
+    readonly overColor?: Color;
+    readonly underColor?: Color;
 
-    constructor(breakpoints: Array<ColorBreakpoint>, noDataColor: Color, defaultColor: Color) {
+    constructor(breakpoints: Array<ColorBreakpoint>, noDataColor: Color, defaultColor: Color, overColor?: Color, underColor?: Color) {
         super();
         this.defaultColor = defaultColor;
         this.noDataColor = noDataColor;
         this.breakpoints = breakpoints;
+        this.overColor = overColor;
+        this.underColor = underColor;
     }
 
     static fromLinearGradientDict(dict: LinearGradientDict): LinearGradient {
@@ -56,6 +60,8 @@ export class LinearGradient extends Colorizer {
             dict.breakpoints.map((b) => ColorBreakpoint.fromDict(b)),
             Color.fromRgbaLike(rgbaColorFromDict(dict.noDataColor)),
             Color.fromRgbaLike(rgbaColorFromDict(dict.defaultColor)),
+            dict.overColor ? Color.fromRgbaLike(rgbaColorFromDict(dict.overColor)) : undefined,
+            dict.underColor ? Color.fromRgbaLike(rgbaColorFromDict(dict.underColor)) : undefined,
         );
     }
 
@@ -105,6 +111,8 @@ export class LinearGradient extends Colorizer {
             this.breakpoints.map((b) => b.clone()),
             this.noDataColor.clone(),
             this.defaultColor.clone(),
+            this.overColor?.clone(),
+            this.underColor?.clone(),
         );
     }
 
@@ -112,11 +120,15 @@ export class LinearGradient extends Colorizer {
         readonly breakpoints?: Array<ColorBreakpoint>;
         readonly noDataColor?: Color;
         readonly defaultColor?: Color;
+        readonly overColor?: Color;
+        readonly underColor?: Color;
     }): LinearGradient {
         return new LinearGradient(
             updates.breakpoints ?? this.breakpoints.map((b) => b.clone()),
             updates.noDataColor ?? this.noDataColor.clone(),
             updates.defaultColor ?? this.defaultColor.clone(),
+            updates.overColor ?? this.overColor?.clone(),
+            updates.underColor ?? this.underColor?.clone(),
         );
     }
 
@@ -126,6 +138,8 @@ export class LinearGradient extends Colorizer {
             breakpoints: this.breakpoints.map((b) => b.toDict()),
             noDataColor: colorToDict(this.noDataColor),
             defaultColor: colorToDict(this.defaultColor),
+            overColor: this.overColor ? colorToDict(this.overColor) : undefined,
+            underColor: this.underColor ? colorToDict(this.underColor) : undefined,
         };
     }
 
@@ -154,12 +168,16 @@ export class LogarithmicGradient extends Colorizer {
     readonly breakpoints: Array<ColorBreakpoint>;
     readonly noDataColor: Color;
     readonly defaultColor: Color;
+    readonly overColor?: Color;
+    readonly underColor?: Color;
 
-    constructor(breakpoints: Array<ColorBreakpoint>, noDataColor: Color, defaultColor: Color) {
+    constructor(breakpoints: Array<ColorBreakpoint>, noDataColor: Color, defaultColor: Color, overColor?: Color, underColor?: Color) {
         super();
         this.defaultColor = defaultColor;
         this.noDataColor = noDataColor;
         this.breakpoints = breakpoints;
+        this.overColor = overColor;
+        this.underColor = underColor;
     }
 
     static fromLogarithmicGradientDict(dict: LogarithmitGradientDict): LogarithmicGradient {
@@ -167,6 +185,9 @@ export class LogarithmicGradient extends Colorizer {
             dict.breakpoints.map((b) => ColorBreakpoint.fromDict(b)),
             Color.fromRgbaLike(rgbaColorFromDict(dict.noDataColor)),
             Color.fromRgbaLike(rgbaColorFromDict(dict.defaultColor)),
+            // Color.fromRgbaLike(rgbaColorFromDict(dict.overColor ?? dict.defaultColor)),
+            dict.overColor ? Color.fromRgbaLike(rgbaColorFromDict(dict.overColor)) : undefined,
+            dict.underColor ? Color.fromRgbaLike(rgbaColorFromDict(dict.underColor)) : undefined,
         );
     }
 
@@ -216,6 +237,8 @@ export class LogarithmicGradient extends Colorizer {
             this.breakpoints.map((b) => b.clone()),
             this.noDataColor.clone(),
             this.defaultColor.clone(),
+            this.overColor?.clone(),
+            this.underColor?.clone(),
         );
     }
 
@@ -223,11 +246,15 @@ export class LogarithmicGradient extends Colorizer {
         readonly breakpoints?: Array<ColorBreakpoint>;
         readonly noDataColor?: Color;
         readonly defaultColor?: Color;
+        readonly overColor?: Color;
+        readonly underColor?: Color;
     }): LogarithmicGradient {
         return new LogarithmicGradient(
             updates.breakpoints ?? this.breakpoints.map((b) => b.clone()),
             updates.noDataColor ?? this.noDataColor.clone(),
             updates.defaultColor ?? this.defaultColor.clone(),
+            updates.overColor ?? this.overColor?.clone(),
+            updates.underColor ?? this.underColor?.clone(),
         );
     }
 
@@ -237,6 +264,8 @@ export class LogarithmicGradient extends Colorizer {
             breakpoints: this.breakpoints.map((b) => b.toDict()),
             noDataColor: colorToDict(this.noDataColor),
             defaultColor: colorToDict(this.defaultColor),
+            overColor: this.overColor ? colorToDict(this.overColor) : undefined,
+            underColor: this.underColor ? colorToDict(this.underColor) : undefined,
         };
     }
 
@@ -265,12 +294,16 @@ export class PaletteColorizer extends Colorizer {
     readonly colors: Map<number, Color>;
     readonly noDataColor: Color;
     readonly defaultColor: Color;
+    readonly overColor?: Color;
+    readonly underColor?: Color;
 
-    constructor(colors: Map<number, Color>, noDataColor: Color, defaultColor: Color) {
+    constructor(colors: Map<number, Color>, noDataColor: Color, defaultColor: Color, overColor?: Color, underColor?: Color) {
         super();
         this.colors = colors;
         this.noDataColor = noDataColor;
         this.defaultColor = defaultColor;
+        this.overColor = overColor;
+        this.underColor = underColor;
     }
 
     static fromPaletteDict(dict: PaletteDict): PaletteColorizer {
@@ -282,6 +315,8 @@ export class PaletteColorizer extends Colorizer {
             colors,
             Color.fromRgbaLike(rgbaColorFromDict(dict.noDataColor)),
             Color.fromRgbaLike(rgbaColorFromDict(dict.defaultColor)),
+            Color.fromRgbaLike(rgbaColorFromDict(dict.overColor ?? dict.defaultColor)),
+            Color.fromRgbaLike(rgbaColorFromDict(dict.underColor ?? dict.defaultColor)),
         );
     }
 
@@ -324,13 +359,15 @@ export class PaletteColorizer extends Colorizer {
             colors.set(i, this.colors.get(i));
         }
 
-        return new PaletteColorizer(colors, this.noDataColor.clone(), this.defaultColor.clone());
+        return new PaletteColorizer(colors, this.noDataColor.clone(), this.defaultColor.clone(), this.overColor?.clone());
     }
 
     cloneWith(updates: {
         readonly colors?: Map<number, Color>;
         readonly noDataColor?: Color;
         readonly defaultColor?: Color;
+        readonly overColor?: Color;
+        readonly underColor?: Color;
     }): PaletteColorizer {
         let colors;
         if (updates.colors) {
@@ -346,6 +383,8 @@ export class PaletteColorizer extends Colorizer {
             colors,
             updates.noDataColor ?? this.noDataColor.clone(),
             updates.defaultColor ?? this.defaultColor.clone(),
+            updates.overColor ?? this.overColor?.clone(),
+            updates.underColor ?? this.underColor?.clone(),
         );
     }
 
@@ -363,6 +402,10 @@ export class PaletteColorizer extends Colorizer {
             colors,
             noDataColor: colorToDict(this.noDataColor),
             defaultColor: colorToDict(this.defaultColor),
+            overColor: this.overColor ? colorToDict(this.overColor) : undefined,
+            underColor: this.underColor ? colorToDict(this.underColor) : undefined,
+            // overColor: colorToDict(this.overColor ?? this.defaultColor),
+            // underColor: colorToDict(this.underColor ?? this.defaultColor),
         };
     }
 
